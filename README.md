@@ -19,21 +19,26 @@ bun i map-tree-utils
 
 ## Why
 
-When you store hierarchical data in a flat structure (for example, in a `Map` keyed by `id`) you often need to render it as a nested tree for UI or export. Conversely, when you receive a nested tree (e.g. from an API or authored JSON) you may want to normalize it into a flat Map for fast lookups and updates.
+When working with hierarchical data, you often face two common tasks:
 
-`map-tree-utils` provides two focused helpers with small surface area and zero runtime dependencies:
-- `getTree` - convert a `Map<string, T>` (flat) into a nested array of root nodes (tree)
+1. You receive a nested tree (e.g., from an API or authored JSON) and want to normalize it into a flat Map for fast lookups and updates.
 
-- `getMap` - convert a nested array (tree) into a `Map<string, AnyObj>` (flat)
+2. You have a flat structure (e.g., a `Map` keyed by `id`) and need to render it as a nested tree for UI or export.
 
-Both functions are written in TypeScript and designed to be simple, predictable, and easy to drop into frontend or backend code.
+`map-tree-utils` provides two small, focused helpers with zero runtime dependencies to handle this:
+
+- `getTree` — convert a `Map<string, T>` (flat) into a nested array of root nodes (tree).
+
+- `getMap` — convert a nested array (tree) into a `Map<string, AnyObj>` (flat).
+
+Written in TypeScript, both functions are simple, predictable, and easy to drop into any frontend or backend project. They save you from writing repetitive boilerplate code while keeping your data handling fast and type-safe.
 
 ## Quick example
 
 ```ts
 import { getTree, getMap } from "map-tree-utils";
 
-// Example flat map (each node knows parentId)
+// --- Example: flat Map representing hierarchical data ---
 const map = new Map([
   ["1", { id: "1", name: "Root" }],
   ["2", { id: "2", name: "Child A", parentId: "1" }],
@@ -41,14 +46,16 @@ const map = new Map([
   ["4", { id: "4", name: "Grandchild", parentId: "2" }],
 ]);
 
-
+// Convert flat Map → nested tree
 const tree = getTree(map);
+console.log("Nested tree:");
 console.log(JSON.stringify(tree, null, 2));
 
-
-// Convert back to flat Map
-const mapData = getMap(tree);
-console.log(mapData.get("4")); // -> { id: "4", name: "Grandchild", parentId: "2" }
+// Convert back: nested tree → flat Map
+const flatMap = getMap(tree);
+console.log("Flattened Map, item with id '4':");
+console.log(flatMap.get("4")); 
+// Output: { id: "4", name: "Grandchild", parentId: "2" }
 ```
 
 ## API
@@ -59,11 +66,11 @@ Converts a `Map` of nodes into a nested array of root nodes.
 
 **Parameters**
 
-- `map: Map<string, T>` — a Map where each value is a node object containing an identifier and optionally a parent reference.
+- `map: Map<string, T>` - a Map where each value is a node object containing an identifier and optionally a parent reference.
 
-- `childKey: string` — the key to use for children arrays in the output nodes. Default: "children".
+- `childKey: string` - the key to use for children arrays in the output nodes. Default: "children".
 
-- `parentKey: string` — the key used on nodes to identify their parent. Default: "parentId".
+- `parentKey: string` - the key used on nodes to identify their parent. Default: "parentId".
 
 **Returns**
 
@@ -73,7 +80,7 @@ An array of nodes that are roots (nodes with no parent found in the provided Map
 
 - The function creates shallow copies of nodes so the original Map values are not mutated.
 
-- If a node references a `parentId` that does not exist in the Map, the node will be treated as a root.
+- If a node references a `parentKey: string` that does not exist in the Map, the node will be treated as a root.
 
 #
 
@@ -84,13 +91,13 @@ Flattens a nested tree array into a `Map<string, AnyObj>` keyed by id (or a cust
 
 **Parameters**
 
-- `tree: AnyObj[]` — array of tree nodes (roots).
+- `tree: AnyObj[]` - array of tree nodes (roots).
 
-- `childKey: string` — property name that holds child nodes. Default: "children".
+- `childKey: string` - property name that holds child nodes. Default: "children".
 
-- `parentKey: string` — property name to be assigned to flattened nodes to indicate their parent id. Default: "parentId".
+- `parentKey: string` - property name to be assigned to flattened nodes to indicate their parent id. Default: "parentId".
 
-- `idKey: string` — property name used in the original nodes to identify them. Default: "id".
+- `idKey: string` - property name used in the original nodes to identify them. Default: "id".
 
 **Returns**
 
