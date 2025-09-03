@@ -1,4 +1,4 @@
-import path, { resolve, join } from 'path';
+import path, { resolve, join } from "path";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 
@@ -9,7 +9,7 @@ export default defineConfig({
       entry: resolve("./src/main.ts"),
       name: "map-tree-utils",
       formats: ["es"],
-      fileName: 'index',
+      fileName: "index",
     },
     rollupOptions: {
       external: [],
