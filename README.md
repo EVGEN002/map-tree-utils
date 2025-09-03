@@ -1,5 +1,4 @@
 ![npm version](https://img.shields.io/npm/v/map-tree-utils)
-![Coverage](https://img.shields.io/codecov/c/github/EVGEN002/map-tree-utils?style=flat-square)
 ![Build Status](https://github.com/EVGEN002/map-tree-utils/actions/workflows/ci.yml/badge.svg)
 
 # map-tree-utils
