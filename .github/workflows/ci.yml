@@ -30,7 +30,8 @@ jobs:
 
       - run: npm run build
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          files: ./coverage/lcov.info
+      - name: Read coverage
+        id: coverage
+        run: |
+          COVERAGE=$(jq '.total.lines.pct' coverage/coverage-final.json)
+          echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
