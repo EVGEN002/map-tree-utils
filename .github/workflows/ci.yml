@@ -30,8 +30,12 @@ jobs:
 
       - run: npm run build
 
-      - name: Read coverage
-        id: coverage
+      - name: Save coverage badge data
         run: |
-          COVERAGE=$(jq '.total.lines.pct' coverage/coverage-final.json)
-          echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+          mkdir -p .github/badges
+          echo "{\"schemaVersion\":1,\"label\":\"coverage\",\"message\":\"${{ steps.coverage.outputs.coverage }}%\",\"color\":\"green\"}" > .github/badges/coverage.json
+
+      - name: Upload badge artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: .github/badges
