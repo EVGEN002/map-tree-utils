@@ -1,0 +1,39 @@
+{
+  "name": "map-tree-utils",
+  "version": "1.0.6",
+  "description": "Tiny TypeScript utilities to convert between flat Map<string, T> structures and nested tree arrays",
+  "main": "src/main.ts",
+  "scripts": {
+    "dev": "bun ./src/main.ts",
+    "clean": "rm -rf dist",
+    "build": "bun run clean && bun build ./src/main.ts --outdir ./dist --target bun --minify && bun run tsc --emitDeclarationOnly"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EVGEN002/map-tree-utils.git"
+  },
+  "keywords": [
+    "frontend",
+    "typescript",
+    "tree",
+    "map",
+    "nested",
+    "array",
+    "flat",
+    "array",
+    "converter"
+  ],
+  "author": "EVGEN002",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EVGEN002/map-tree-utils/issues"
+  },
+  "homepage": "https://github.com/EVGEN002/map-tree-utils#readme",
+  "devDependencies": {
+    "@types/node": "^24.3.1",
+    "path": "^0.12.7",
+    "typescript": "^5.9.2",
+    "@types/bun": "latest"
+  },
+  "private": true
+}
