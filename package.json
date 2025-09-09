@@ -1,6 +1,6 @@
 {
   "name": "map-tree-utils",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Tiny TypeScript utilities to convert between flat Map<string, T> structures and nested tree arrays",
   "main": "src/main.ts",
   "scripts": {
