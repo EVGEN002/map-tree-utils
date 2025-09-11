@@ -57,17 +57,16 @@ export const getMap = <
     for (const node of nodes) {
       const children = node[childKey] as unknown as T[] | undefined;
 
-      const { [childKey]: _, ...rest } = node;
       const flatNode: Omit<T, ChildKey> & { [K in ParentKey]?: string | null } = {
-        ...rest,
+        ...node,
         ...(parentId ? { [parentKey]: parentId } : {}),
       };
+      delete (flatNode as any)[childKey];
 
-      const id = String(node[idKey]);
-      normalized.set(id, flatNode);
+      normalized.set(String(node[idKey]), flatNode);
 
       if (Array.isArray(children) && children.length > 0) {
-        walkTree(children, id);
+        walkTree(children, String(node[idKey]));
       }
     }
   };

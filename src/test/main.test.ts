@@ -4,10 +4,10 @@ import { getTree, getMap } from "../main";
 describe("map-tree-utils", () => {
   test("converts flat map to tree", () => {
     const map = new Map([
-      ["1", { id: "1", name: "Root", parentId: null }],
-      ["1_1", { id: "2", name: "Child A", parentId: "1" }],
-      ["1_2", { id: "3", name: "Child B", parentId: "1" }],
-      ["4", { id: "4", name: "Grandchild", parentId: "1_1" }],
+      ["1", { code: "1", name: "Root", parentId: null }],
+      ["1_1", { code: "2", name: "Child A", parentId: "1" }],
+      ["1_2", { code: "3", name: "Child B", parentId: "1" }],
+      ["4", { code: "4", name: "Grandchild", parentId: "1_1" }],
     ]);
 
     const childKey = "rows";
