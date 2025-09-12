@@ -9,7 +9,12 @@ export const getTree = <
 >(
   map: Map<string, T>,
   childKey: ChildKey = "children" as ChildKey,
-  parentKey: string = "parentId" as ParentKey
+  parentKey: string = "parentId" as ParentKey,
+  sortBy?:
+    | keyof T
+    | string
+    | ((a: TreeNode<T, ChildKey>, b: TreeNode<T, ChildKey>) => number),
+  order: "asc" | "desc" = "asc"
 ) => {
   const copy = new Map<string, TreeNode<T, ChildKey>>();
 
@@ -34,6 +39,45 @@ export const getTree = <
     }
   }
 
+  let comparator: (
+    a: TreeNode<T, ChildKey>,
+    b: TreeNode<T, ChildKey>
+  ) => number;
+
+  if (typeof sortBy === "function") {
+    comparator = sortBy;
+  } else if (sortBy != null) {
+    const key = sortBy as keyof T | string;
+    comparator = (a, b) => {
+      const va = (a as any)[key];
+      const vb = (b as any)[key];
+
+      if (va == null && vb == null) return 0;
+      if (va == null) return -1;
+      if (vb == null) return 1;
+
+      if (typeof va === "number" && typeof vb === "number") return va - vb;
+
+      return String(va).localeCompare(String(vb));
+    };
+  } else {
+    comparator = () => 0;
+  }
+
+  const dir = order === "asc" ? 1 : -1;
+
+  const sortRecursively = (nodes: TreeNode<T, ChildKey>[]) => {
+    if (!nodes || nodes.length === 0) return;
+    if (sortBy != null) {
+      nodes.sort((a, b) => comparator(a, b) * dir);
+    }
+    for (const n of nodes) {
+      sortRecursively(n[childKey] as TreeNode<T, ChildKey>[]);
+    }
+  };
+
+  sortRecursively(roots);
+
   return roots;
 };
 
@@ -57,10 +101,11 @@ export const getMap = <
     for (const node of nodes) {
       const children = node[childKey] as unknown as T[] | undefined;
 
-      const flatNode: Omit<T, ChildKey> & { [K in ParentKey]?: string | null } = {
-        ...node,
-        ...(parentId ? { [parentKey]: parentId } : {}),
-      };
+      const flatNode: Omit<T, ChildKey> & { [K in ParentKey]?: string | null } =
+        {
+          ...node,
+          ...(parentId ? { [parentKey]: parentId } : {}),
+        };
       delete (flatNode as any)[childKey];
 
       normalized.set(String(node[idKey]), flatNode);
